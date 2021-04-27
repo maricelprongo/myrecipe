@@ -1,0 +1,13 @@
+db.sqlite3
+geckodriver.log
+__pycache
+*.pyc/*.cmake/DS_Store/.user >> .gitignore
+echo *.pyc/*.cmake/DS_Store/.user
+*.pyc/*.cmake/DS_Store/.user >> .gitignore
+echo *.pyc/*.cmake/DS_Store/.user
+*.pyc/*.cmake/DS_Store/.user >> .gitignore
+
+
+echo *.pyc/*.cmake/DS_Store/.user
+*.pyc/* .cmake/DS_Store/.user >> .gitignore
+echo *.pyc/* .cmake/DS_Store/.user
