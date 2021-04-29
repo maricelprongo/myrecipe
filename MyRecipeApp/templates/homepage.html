@@ -3,47 +3,48 @@
 	<title>My Recipe</title>
 </head>
 <body>
-		<h1 style="padding-top: 2%; text-align: center; ">My Recipe</h1>
+	<h1 style="padding-top: 2%; text-align: center; ">-- My Recipe --</h1>
 
-<form>
+	<form style="text-align: center; padding-top: 3%" method="POST">
 
-	<label>
-		Type of Dish:   
-	</label>
+	{% csrf_token %}
 
-	<input type="text" id="TypeOfDish" name="TypeOfDish" placeholder="Please Enter Type of Dish" size="20px" >
-	<br><br>
 	<label>
 		Name of Dish:
 	</label>
-	<input type="text" id="NameOfDish" name="NameOfDish" placeholder="Please Enter Name of Dish" size="19px" >
+	<input 
+		type="text" 
+		id="NameofDish" 
+		name="NameofDish" 
+		placeholder="Please Enter Name of Dish" 
+		size="19px" >
 
-	<br><br>
-	<label>
-		Ingredients:
-	</label>
-	<input type="text" id="Ingredients" name="Ingredients" size="21px" >
+	<br><br><br>
 
-	<br><br>
-	<label>
-		Procedures:
-	</label>
-	<input type="text" id="Procedures" name="Procedures" size="21px" >
-
-	<br><br>
 	<label>
 		Name:
 	</label>
-	<input type="text" id="Name" name="Name" placeholder="Please Enter Your Name" size="26px" >
+	<input 
+		type="text" 
+		id="Name" 
+		name="Name" 
+		placeholder="Please Enter Your Name" 
+		size="26px" >
 
+	<br><br><br>
 
+	<input type="submit" id="Create" value="Create" name="Create">
 
-
-
-
+	
 
 </form>
 
-</form>
+	<table id="DishName" style="padding-left: 40%; padding-top: 5%">
+		<tr>
+			<td>1:{{newDishName}}</td>
+			<td>by</td>
+			<td>{{newName}}</td>
+		</tr>
+	</table>
 </body>
 </html>
