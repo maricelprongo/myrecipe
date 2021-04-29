@@ -38,13 +38,15 @@
 	
 
 </form>
+	<p style="padding-left: 32%; padding-top: 5%">Recently Added: </p>
 
-	<table id="DishName" style="padding-left: 40%; padding-top: 5%">
+	<table id="DishName" style="padding-left: 34%; padding-top: 1%">
+		{% for dish in newDishName %}
+
 		<tr>
-			<td>1:{{newDishName}}</td>
-			<td>by</td>
-			<td>{{newName}}</td>
+			<td>{{forloop.counter}}:) {{dish.text}}</td>
 		</tr>
+		{% endfor %}
 	</table>
 </body>
 </html>

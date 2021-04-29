@@ -20,7 +20,9 @@ class MyRecipeTest(TestCase):
 		self.assertEqual(Dish.objects.count(), 1)
 		newDish = Dish.objects.first()
 		self.assertEqual(newDish.text, 'New name of Dish')
-		
+
+	def test_redirect_POST_req(self):
+		response =self.client.post('/', data = {'NameofDish': 'New name of Dish'})
 		self.assertEqual(response.status_code, 302)
 		self.assertEqual(response['location'], '/')
 
@@ -28,6 +30,16 @@ class MyRecipeTest(TestCase):
 	def test_saves_dishes(self):
 		self.client.get('/')
 		self.assertEqual(Dish.objects.count(), 0)
+
+	def test_template_display_list(self):
+		Dish.objects.create(text='Dish 1')
+		Dish.objects.create(text='Dish 2')
+		response = self.client.get('/')
+		self.assertIn('Dish 1', response.content.decode())
+#		self.assertIn('Dish 2', response.content,decode())
+
+
+
 
 class ORMTest(TestCase):
 

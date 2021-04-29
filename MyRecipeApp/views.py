@@ -7,9 +7,10 @@ def my_recipe(request):
 #		newDish = request.POST['NameofDish']
 		Dish.objects.create(text=request.POST['NameofDish'])
 		return redirect('/')
+	dishes = Dish.objects.all()
 #	else:
 #		newDish=""
-#	return render(request, 'homepage.html', {'newDishName': newDish,})
+	return render(request, 'homepage.html', {'newDishName': dishes,})
 
 
 
@@ -27,4 +28,4 @@ def my_recipe(request):
 
 #	if request.method == 'POST':
 #		return HttpResponse(request.POST['NameofDish'])
-	return render(request, 'homepage.html')
+#	return render(request, 'homepage.html')
