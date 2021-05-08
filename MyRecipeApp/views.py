@@ -1,31 +1,31 @@
 from django.shortcuts import render, redirect
-#from django.http import HttpResponse
-from MyRecipeApp.models import Dish
+from django.http import HttpResponse
+from MyRecipeApp.models import Dish, MRecipe
+
+
+
 
 def my_recipe(request):
-	if request.method == 'POST':
-#		newDish = request.POST['NameofDish']
-		Dish.objects.create(text=request.POST['NameofDish'])
-		return redirect('/')
 	dishes = Dish.objects.all()
-#	else:
-#		newDish=""
-	return render(request, 'homepage.html', {'newDishName': dishes,})
+	return render(request, 'homepage.html',{'dishes' : dishes})
 
 
 
-#	dish1 = Dish()
-#	dish1.text=request.POST.get('NameofDish', '')
-#	dish1.save()
-#	dish2 = Dish()
-#	dish2.text=request.POST.get('Name', '')
-#	dish2.save()
-#	return render(request, 'homepage.html', {'newDishName': dish1.text, 'newName': dish2.text,})
+
+def ViewRecipe(request, recipe_id):
+	recipe = MRecipe.objects.get(id=recipe_id)
+	return render(request, 'next.html', {'recipe': recipe})
 
 
-#	return render(request, 'homepage.html', {'newDishName':request.POST.get('NameofDish'),})# 'newName':request.POST.get('Name'),})
+def NewRecipe(request):
+    recipe = MRecipe.objects.create()
+    Dish.objects.create(rName=request.POST['fName'],rNameofDish =request.POST['NameofDish'],rMainRecipe=request.POST['MainRecipe'], recipe=recipe)
+    return redirect(f'/MyRecipeApp/{recipe.id}/')
+
+def AddRecipe(request, recipe_id):
+    recipe = MRecipe.objects.get(id=recipe_id)
+    Dish.objects.create(rIngredients=request.POST['Ingredients'],rProcedures =request.POST['Procedures'], recipe=recipe)
+    return redirect(f'/MyRecipeApp/{recipe.id}/')
 
 
-#	if request.method == 'POST':
-#		return HttpResponse(request.POST['NameofDish'])
-#	return render(request, 'homepage.html')
+

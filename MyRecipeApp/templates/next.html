@@ -1,0 +1,91 @@
+<html>
+<head>
+	<title>My Recipe</title>
+
+<!--	<script> 
+
+		var cnt = 3;
+		function addMoreIngredients() {
+			var ing = document.getElementById('Ingredients'),
+			clone = ing.cloneNode(true);
+			clone.id = "Ingredients"+cnt; clone.name = "Ingredients"+cnt;
+			document.body.appendChild(clone);
+			document.body.appendChild(document.createTextNode("   "));
+			document.body.appendChild(document.createElement("br"));
+			cnt += 1;
+		}
+	</script>
+-->
+
+
+
+</head>
+<style>
+th {  
+  border: 3px dashed white;
+  padding: 10px;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  padding-top: 2%
+
+}
+
+
+
+td {
+  padding: 10px;
+  text-align: left; 
+}
+</style>
+
+<body style="background-color:#FFA07A">
+	<br>
+	<h1 style="padding-top: 2%;
+		padding-bottom: 2%; 
+		border: 3px dashed white;
+  		text-align: center">-- My Recipe --</h1>
+
+	<form style="text-align: center; padding-top: 3%" method="POST" action="/MyRecipeApp/{{ recipe.id }}/AddRecipe">
+
+
+	<label>
+		Ingredients:
+	</label>
+	<input type="text" id="Ingredients" name="Ingredients" size="21px" placeholder="Ingredients" >
+	
+<!--	<input type="button" style="color:powderblue" value="More..." onclick="addMoreIngredients()" >
+-->
+	<br><br><br>
+	<label>
+		Procedures:
+	</label>
+	<input type="text" id="Procedures" name="Procedures" size="21px" placeholder="Procedures" >
+
+	<br><br><br>
+
+	<input type="submit" id="Create" value="Create" name="Create">
+	{% csrf_token %}
+</form>
+<table  id="details"  >
+	 
+  <tr>
+    <th>Ingredients</th>
+    <th>Procedures</th>
+
+  </tr>
+  {% for dish in recipe.dish_set.all %} 
+  <tr> 
+    <td>{{ dish.rIngredients }}</td>
+    <td>{{ dish.rProcedures }} </td>
+  </tr>
+  	{% endfor %}
+</table>
+
+
+</body>
+</html>
+

@@ -2,12 +2,46 @@
 <head>
 	<title>My Recipe</title>
 </head>
-<body>
-	<h1 style="padding-top: 2%; text-align: center; ">-- My Recipe --</h1>
 
-	<form style="text-align: center; padding-top: 3%" method="POST">
+<style>
+th {  
+  border: 3px dashed white;
+  padding: 10px;
+  text-align: center;
+}
+table {
+  font-family: arial, sans-serif;
+  margin-left: 25%;
+  margin-right: 25%
+}
 
-	{% csrf_token %}
+td{
+  text-align: center;
+  width:30%;
+}
+
+</style>
+
+<body style="background-color:#FFA07A">
+	<br>
+	<h1 style="padding-top: 2%;
+		padding-bottom: 2%; 
+		border: 3px dashed white;
+  		text-align: center">-- My Recipe --</h1>
+
+	<form style="text-align: center; padding-top: 3%" method="POST" action="/MyRecipeApp/new">
+
+	<label>
+		Name:
+	</label>
+	<input 
+		type="text" 
+		id="fName" 
+		name="fName" 
+		placeholder="Please Enter Your Name" 
+		size="26px" >
+
+	<br><br><br>
 
 	<label>
 		Name of Dish:
@@ -22,31 +56,42 @@
 	<br><br><br>
 
 	<label>
-		Name:
+		Main Recipe:
 	</label>
 	<input 
 		type="text" 
-		id="Name" 
-		name="Name" 
-		placeholder="Please Enter Your Name" 
-		size="26px" >
+		id="MainRecipe" 
+		name="MainRecipe" 
+		placeholder="Please Enter Main Recipe" 
+		size="20px">
 
 	<br><br><br>
 
-	<input type="submit" id="Create" value="Create" name="Create">
+	
+
+	<input type="submit" id="Continue" value="Continue" name="Continue">
+
+	{% csrf_token %}
 
 	
 
 </form>
-	<p style="padding-left: 32%; padding-top: 5%">Recently Added: </p>
+	<p style="margin-left: 25%;padding-left: 2%;padding-top: 1%;padding-bottom: 1% ;border: 3px dashed white; width: 18%; position: center">Recently Added: </p>
 
-	<table id="DishName" style="padding-left: 34%; padding-top: 1%">
-		{% for dish in newDishName %}
-
+	<table id="recipe">
+		
 		<tr>
-			<td>{{forloop.counter}}:) {{dish.text}}</td>
+			<th>Name of Dish</th>
+			<th>Owner of Recipe</th>
+		</tr>
+		{% for dish in dishes %}
+		<tr>
+			<td>{{ dish.rNameofDish }}</td>
+			<td> {{ dish.rName }}</td>
 		</tr>
 		{% endfor %}
 	</table>
 </body>
 </html>
+
+
