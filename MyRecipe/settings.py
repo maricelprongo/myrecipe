@@ -26,7 +26,7 @@ SECRET_KEY = ')2r^@qxa(4xwgq!^&!q&5=3eq06yscgc%0vk%6u(6iry%j9d40'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['myrecipe.ph']
 
 
 # Application definition
