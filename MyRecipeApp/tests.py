@@ -1,100 +1,111 @@
-from django.urls import resolve
 from django.test import TestCase
-from MyRecipeApp.views import my_recipe
-from MyRecipeApp.models import Dish, MRecipe
+#from django.urls import resolve
+#from MyRecipeApp.views import RecipeBook
 #from django.http import HttpRequest
 #from django.template.loader import render_to_string
+from MyRecipeApp.models import Dish, Creator
+
+class HomePageTest(TestCase):
+
+#	def test_root_url_resolves_to_mainpage_view(self):
+#		found = resolve('/')
+#		self.assertEqual(found.func, RecipeBook)
+
+	def test_mainpage_returns_correct_view(self):
+		response = self.client.get('/')
+		self.assertTemplateUsed(response, 'homepage.html')
+
+
+class ORMTest(TestCase):
+
+	def test_saving_retrieving_list(self):
+		newCreator = Creator()
+		newCreator.save()
+		txtDish1 = Dish()
+		txtDish1.CreatorId = newCreator
+		txtDish1.dNameofDish = 'Dish one'
+		txtDish1.save()
+		txtDish2 = Dish()
+		txtDish2.CreatorId = newCreator
+		txtDish2.dNameofDish = 'Dish two'
+		txtDish2.save()
+		savedCreator = Creator.objects.first()
+		self.assertEqual(savedCreator, newCreator)
+		savedDishs = Dish.objects.all()
+		self.assertEqual(savedDishs.count(), 2)
+		savedDish1 = savedDishs[0]
+		savedDish2 = savedDishs[1]
+		self.assertEqual(savedDish1.dNameofDish, 'Dish one')
+		self.assertEqual(savedDish2.dNameofDish, 'Dish two')
+		self.assertEqual(savedDish1.CreatorId, newCreator)
+		self.assertEqual(savedDish2.CreatorId, newCreator)
 
 
 
-class MyRecipeTest(TestCase):
+class ViewTest(TestCase):
 
 
-	def test_root_url_resolves_to_my_recipeviews(self):
-		found = resolve('/')
-		self.assertEqual(found.func, my_recipe)
-
-	def test_only_saves_my_recipewhen_necessary(self):
-		self.client.get('/')
-		self.assertEqual(Dish.objects.count(), 0)
-
-
-
-class MRecipeViewTest(TestCase):
-
-
-	def test_uses_recipetemplate(self):
-		recipe = MRecipe.objects.create()
-		response = self.client.get(f'/MyRecipeApp/{recipe.id}/')
+	def test_listview_uses_listpage(self):
+		newCreator = Creator.objects.create()
+		response =self.client.get(f'/MyRecipeApp/{newCreator.id}/')
 		self.assertTemplateUsed(response, 'next.html')
 
-#	def test_displays_all_recipedishes(self):
-#		recipe = MRecipe.objects.create()
-#		Dish.objects.create(rName='Maricel Prongo',recipe=recipe)
+
+	def test_pass_list_to_template(self):
+		creatorList1 = Creator.objects.create()
+		creatorList2 = Creator.objects.create()
+		passList = Creator.objects.create()
+		response = self.client.get(f'/MyRecipeApp/{passList.id}/')
+		self.assertEqual(response.context['CreatorId'], passList)
 
 
 
-	def test_passes_correct_recipeto_template(self):
-		other_recipe = MRecipe.objects.create()
-		correct_recipe = MRecipe.objects.create()
-		response = self.client.get(f'/MyRecipeApp/{correct_recipe.id}/')
-		self.assertEqual(response.context['recipe'], correct_recipe)
+class CreateListTest(TestCase):
+
+#	def test_save_POST_request(self):
+#		self.client.post('/MyRecipeApp/newlist_url', data={'Ingredients': 'New entry'})
+#		self.assertEqual(Dish.objects.count(),1)
+#		newDish = Dish.objects.first()
+#		self.assertEqual(newDish.dNameofDish, 'New entry')
+
+	def test_save_POST_request_2(self):
+		self.client.post('/MyRecipeApp/newlist_url', data={'fName': 'New creator', 'fGender': 'New creator gender', 'fEAddress': 'New email address', 'fContactNumber': 'New creator number'})
+		self.assertEqual(Creator.objects.count(), 1)
+		newCar = Creator.objects.first()
+		self.assertEqual(newCar.crName, 'New creator')
+		self.assertEqual(newCar.crGender, 'New creator gender')
 
 
-
-class NewMRecipeTest(TestCase):
-
-
-
-	def test_redirects_after_POST(self):
-		response = self.client.post('/MyRecipeApp/new', data={'fName': 'New Name','NameofDish': 'New Dish','MainRecipe':'New main recipe','Ingredients': 'New Ingredients','Procedures': 'New Procedures'})
-		new_recipe = MRecipe.objects.first()
-		self.assertRedirects(response, f'/MyRecipeApp/{new_recipe.id}/')
-
-
-class NewDishTest(TestCase):
-
-
-	def test_can_save_a_POST_request_to_an_existing_recipe(self):
-		other_recipe = MRecipe.objects.create()
-		correct_recipe = MRecipe.objects.create()
-		self.client.post(f'/MyRecipeApp/{correct_recipe.id}/AddRecipe', data={'fName': 'New Name','NameofDish': 'New Dish','MainRecipe':'New main recipe','Ingredients': 'New Ingredients','Procedures': 'New Procedures'})
-		self.assertEqual(Dish.objects.count(), 1)
-		new_dish = Dish.objects.first()
-		self.assertEqual(new_dish.rName, '')
-		self.assertEqual(new_dish.recipe, correct_recipe)
-
-	def test_redirects_to_recipeview(self):        
-		other_recipe = MRecipe.objects.create()        
-		correct_recipe = MRecipe.objects.create()        
-		response = self.client.post(f'/MyRecipeApp/{correct_recipe.id}/AddRecipe', data={'fName': 'New Name','NameofDish': 'New Dish','MainRecipe':'New main recipe','Ingredients': 'New Ingredients','Procedures': 'New Procedures'})
-		self.assertRedirects(response, f'/MyRecipeApp/{correct_recipe.id}/')
-
-class Recipe_ORM(TestCase):
-
-	def test_saving_and_retrieving_dishes(self):
-		recipe = MRecipe()        
-		recipe.save()
-		first_dish = Dish()
-		first_dish.rName = 'The first recipe owner'
-		first_dish.recipe = recipe
-		first_dish.save()
-		second_dish = Dish()
-		second_dish.rName = 'The second recipe owner'
-		second_dish.recipe = recipe
-		second_dish.save()
-		saved_recipe = MRecipe.objects.first()
-		self.assertEqual(saved_recipe, recipe)
-		saved_dishes = Dish.objects.all()
-		self.assertEqual(saved_dishes.count(), 2)
-		first_saved_dish = saved_dishes[0]
-		second_saved_dish = saved_dishes[1]
-		self.assertEqual(first_saved_dish.rName, 'The first recipe owner')
-		self.assertEqual(second_saved_dish.rName, 'The second recipe owner')
-		self.assertEqual(second_saved_dish.recipe, recipe)
+	def test_redirect_POST_2(self):
+		response = self.client.post('/MyRecipeApp/newlist_url', data={'fName': 'New creator', 'fGender': 'New creator gender', 'fEAddress': 'New email address', 'fContactNumber': 'New creator number'})
+		newList = Creator.objects.first()
+		self.assertRedirects(response, f'/MyRecipeApp/{newList.id}/')
 
 
 
 
+#	def test_redirect_POST(self):
+#		response = self.client.post('/MyRecipeApp/newlist_url', data={'Ingredients': 'New entry'})
+#		newList = Creator.objects.first()
+#		self.assertRedirects(response, f'/MyRecipeApp/{newList.id}/')
 
+class AddDishTest(TestCase):
+
+	def test_add_POST_request_to_existing_list(self):
+		CreatorList1 = Creator.objects.create()
+		CreatorList2 = Creator.objects.create()
+		existingList = Creator.objects.create()
+		self.client.post(f'/MyRecipeApp/{existingList.id}/addDish', data={'nNameofDish':'New Dish for existing list','nMainIngredient':'New Dish for existing list','nDifficulty':'New Dish for existing list','nCategory':'New Dish for existing list','nServings':'New Dish for existing list',})#'Ingredients':'New Dish for existing list', 'Procedures':'New Dish existing list'})
+		self.assertEqual(Dish.objects.count(),1)
+		newDish = Dish.objects.first()
+		self.assertEqual(newDish.dNameofDish, 'New Dish for existing list')
+		self.assertEqual(newDish.CreatorId, existingList)
+
+	def test_sredirect_to_list_view(self):
+		CreatorList1 = Creator.objects.create()
+		CreatorList2 = Creator.objects.create()
+		CreatorList3 = Creator.objects.create()
+		existingList = Creator.objects.create()
+		response = self.client.post(f'/MyRecipeApp/{existingList.id}/addDish', data={'nNameofDish':'New Dish for existing list','nMainIngredient':'New Dish for existing list','nDifficulty':'New Dish for existing list','nCategory':'New Dish for existing list','nServings':'New Dish for existing list',})#'Ingredients':'New Dish for existing list', 'Procedures':'New Dish existing list'})
+		self.assertRedirects(response, f'/MyRecipeApp/{existingList.id}/')
 
